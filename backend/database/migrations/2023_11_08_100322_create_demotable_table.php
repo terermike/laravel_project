@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('demotable', function (Blueprint $table) {
             $table->id();
+            $table->string('first name');
+            $table->string('last name');
+            $table->string('D.o.B');
+            $table->string('location');
             $table->timestamps();
         });
     }
