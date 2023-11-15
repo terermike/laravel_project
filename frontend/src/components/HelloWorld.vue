@@ -1,44 +1,52 @@
 <script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
+import {
+  ElRow,
+  ElButton,
+} from 'element-plus'; // Import Element UI components
+
+import {
+  Check,
+  Delete,
+  Edit,
+  Message,
+  Search,
+  Star,
+} from '@element-plus/icons-vue'; // Import Element UI icons
+
+// Component setup
+const plainButtons = [
+  { text: 'Plain', plain: true },
+  { text: 'Primary', type: 'primary', plain: true },
+  { text: 'Success', type: 'success', plain: true },
+  { text: 'Info', type: 'info', plain: true },
+  { text: 'Warning', type: 'warning', plain: true },
+  { text: 'Danger', type: 'danger', plain: true },
+];
+
+
 </script>
 
 <template>
-  <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      You’ve successfully created a project with
-      <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
-    </h3>
+  <div>
+    <ElRow class="mb-4">
+      <!-- Render buttons with different types -->
+      <ElButton :key="index" v-for="(button, index) in mb4Buttons" :type="button.type">{{ button.text }}</ElButton>
+    </ElRow>
+
+    <ElRow class="mb-4">
+      <!-- Render plain buttons with different types -->
+      <ElButton :key="index" v-for="(button, index) in plainButtons" :type="button.type" :plain="button.plain">{{ button.text }}</ElButton>
+    </ElRow>
+
+    <ElRow class="mb-4">
+      <!-- Render round buttons with different types -->
+      <ElButton :key="index" v-for="(button, index) in roundButtons" :type="button.type" :round="button.round">{{ button.text }}</ElButton>
+    </ElRow>
+
+    <ElRow>
+      <!-- Render circle buttons with icons -->
+      <ElButton :key="index" v-for="(button, index) in circleButtons" :type="button.type" :icon="button.icon" :circle="button.circle" />
+    </ElRow>
   </div>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
-</style>
