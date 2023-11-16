@@ -21,7 +21,7 @@
 <script>
 import User from "../apis/User";
 // import axios from 'axios';
-import Csrf from '../apis/Csrf';
+// import Csrf from '../apis/Csrf';
 
 export default {
   data() {
@@ -60,15 +60,14 @@ export default {
   },
   async register() {
     try {
-      // Step 1: Get CSRF token
-      await Csrf.getCookie();
-      // Step 2: Validate the form
+      // Step 1: Validate the form
       await this.$refs.form.validate();
-      // Step 3: If validation passes, call the backend API to register the user
+      // Step 2: If validation passes, call the backend API to register the user
       const response = await User.register(this.form);
-      // Step 4: Handle the response from the backend
+      // Step 3: Handle the response from the backend
       if (response.status === 200) {
         // Registration successful, do something (e.g., redirect, show success message)
+        this.$router.push({name : 'login'});
         console.log('Registration successful');
       } else {
         // Registration failed, handle the error (e.g., show error message)
