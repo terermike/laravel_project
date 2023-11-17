@@ -37,19 +37,21 @@ export default {
     }
   },
   methods: {
-    // login() {
-    //     User.login(this.form)
-    // }
     async login() {
       try {
-        await this.$refs.form.validate(); // Validate the form
+        await this.$refs.form.validate() // Validate the form
         const response = await User.login(this.form) // Call the backend API to login
         // Handle the response from the backend
         if (response.status === 200) {
+          localStorage.setItem("auth", "true")
           // Login successful, do something (e.g., redirect, show success message)
           console.log('Login successful')
+          // this.$router.push({name: "DashBoard"})
+        } else if (response.status === 401) {
+          // Unauthorized, handle accordingly
+          console.log('Invalid email or password')
         } else {
-          // Login failed, handle the error (e.g., show error message)
+          // Handle other statuses
           console.error('Login failed', response.data)
         }
       } catch (error) {
