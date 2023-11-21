@@ -1,15 +1,18 @@
-import Api from "./Api";
-import Csrf from "./Csrf";
+import Api from './Api'
+// import Csrf from "./Csrf";
 export default {
-    async register(form) {
-        await Csrf.getCookie();
+  register(form) {
+    // await Csrf.getCookie();
 
-        return Api.post("/auth/register", form)
-    },
+    return Api().post('/auth/register', form)
+  },
 
-    async  login(form) {
-        await Csrf.getCookie();
+  login(form) {
+    // await Csrf.getCookie();
 
-        return Api.post("/auth/login", form);
-    }
-};
+    return Api().post('/auth/login', form)
+  },
+  auth() {
+    return Api().get('/user')
+  }
+}

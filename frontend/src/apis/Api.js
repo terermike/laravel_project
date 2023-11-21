@@ -1,9 +1,17 @@
 import axios from "axios";
 
-let Api = axios.create({
+let BaseApi = axios.create({
     baseURL: "http://localhost:8000/api"
 });
+let Api = function() {
+    let token = localStorage.getItem('token');
 
-Api.defaults.withCredentials = true;
+    if(token) {
+        BaseApi.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    return BaseApi;
+}
+
+// Api.defaults.withCredentials = true;
 
 export default Api;
