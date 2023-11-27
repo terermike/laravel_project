@@ -6,6 +6,7 @@ import DashBoard from '../components/DashBoard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  base: '/',
   routes: [
     // {
     //   path: '/',
