@@ -1,7 +1,7 @@
 import axios from "axios";
 
 let BaseApi = axios.create({
-    baseURL: "http://api.terer.tech:80/api"
+    baseURL: "https://api.terer.tech:443/api"
 });
 let Api = function() {
     let token = localStorage.getItem('token');
