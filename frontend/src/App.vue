@@ -2,11 +2,11 @@
   <el-container>
     <div id="app">
       <el-header>
-        <el-menu mode="horizontal">
-          <el-menu-item index="1">
+        <el-menu mode="horizontal" style="width: 300px;">
+          <el-menu-item index="1" v-if="!isHomePage">
             <router-link to="/register">Register</router-link>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="2" v-if="!isHomePage">
             <router-link to="/login">Login</router-link>
           </el-menu-item>
         </el-menu>
@@ -14,30 +14,26 @@
       <el-main>
         <router-view></router-view>
       </el-main>
-      <!-- </el-container> -->
     </div>
   </el-container>
-  <!-- <div id="app">
-    <router-link to="/register" class="nav-link">Register</router-link>
-    <router-link to="/login" class="nav-link">Login</router-link>
-    <router-view></router-view>
-  </div> -->
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue';
-import UserRegister from './components/UserRegister.vue' // Import the UserRegister component
-import UserLogin from './components/UserLogin.vue' // Import the UserRegister component
+import UserRegister from './components/UserRegister.vue';
+import UserLogin from './components/UserLogin.vue';
 
 export default {
   name: 'app',
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    UserRegister, // Register the UserRegister component
-    // eslint-disable-next-line vue/no-unused-components
+    UserRegister,
     UserLogin
+  },
+  computed: {
+    isHomePage() {
+      return this.$route.path === '/';
+    }
   }
-}
+};
 </script>
 
 <style>
