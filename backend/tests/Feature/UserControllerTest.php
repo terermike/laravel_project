@@ -88,4 +88,30 @@ class UserControllerTest extends TestCase
                 'message',
             ]);
     }
+
+    /** @test */
+    public function it_returns_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $response = $this->json('GET', 'api/user');
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+    }
+
+    /** @test */
+    public function it_requires_authentication()
+    {
+        $response = $this->json('Get', 'api/user');
+
+        $response->assertStatus(401);
+        
+    }
 }
