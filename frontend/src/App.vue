@@ -2,12 +2,18 @@
   <el-container>
     <div id="app">
       <el-header>
-        <el-menu mode="horizontal" style="width: 300px;">
-          <el-menu-item index="1" v-if="!isHomePage">
+        <el-menu mode="horizontal" style="width: 300px">
+          <el-menu-item index="1" v-if="isRegisterOrLoginPage">
             <router-link to="/register">Register</router-link>
           </el-menu-item>
-          <el-menu-item index="2" v-if="!isHomePage">
+          <el-menu-item index="2" v-if="isRegisterOrLoginPage">
             <router-link to="/login">Login</router-link>
+          </el-menu-item>
+          <el-menu-item index="3" v-if="isPlaceOrderPage">
+            <router-link to="/products">View Products</router-link>
+          </el-menu-item>
+          <el-menu-item index="4" v-if="isProductsPage">
+            <router-link to="/place-order">Place Order</router-link>
           </el-menu-item>
         </el-menu>
       </el-header>
@@ -19,21 +25,31 @@
 </template>
 
 <script>
-import UserRegister from './components/UserRegister.vue';
-import UserLogin from './components/UserLogin.vue';
+import UserRegister from './components/UserRegister.vue'
+import UserLogin from './components/UserLogin.vue'
+import PlaceOrder from './components/PlaceOrder.vue'
+import ProductList from './components/ProductList.vue'
 
 export default {
   name: 'app',
   components: {
     UserRegister,
-    UserLogin
+    UserLogin,
+    PlaceOrder,
+    ProductList
   },
   computed: {
-    isHomePage() {
-      return this.$route.path === '/';
+    isRegisterOrLoginPage() {
+      return this.$route.path === '/register' || this.$route.path === '/login'
+    },
+    isPlaceOrderPage() {
+      return this.$route.path === '/place-order'
+    },
+    isProductsPage() {
+      return this.$route.path === '/products'
     }
   }
-};
+}
 </script>
 
 <style>
@@ -49,10 +65,6 @@ export default {
   color: #42b983;
   font-weight: bold;
   margin-right: 10px;
-}
-.container {
-  max-width: 1200px;
-  margin: auto;
 }
 .el-main {
   background: #eef1f4;

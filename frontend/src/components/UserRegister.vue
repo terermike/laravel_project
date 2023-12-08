@@ -1,27 +1,27 @@
 <template>
   <!-- <div class="login-dash"> -->
-    <el-form ref="form" :model="form" label-width="120px" size="small">
-      <el-form-item label="Name" prop="name" :rules="nameRules">
-        <el-input v-model="form.name" class="input" size="small"></el-input>
-      </el-form-item>
-      <el-form-item label="Email" prop="email" :rules="emailRules">
-        <el-input v-model="form.email" class="input" size="small"></el-input>
-      </el-form-item>
-      <el-form-item label="Password" prop="password" :rules="passwordRules">
-        <el-input type="password" v-model="form.password" class="input" size="small"></el-input>
-      </el-form-item>
-      <el-form-item label="Confirm Password" prop="confirmPassword" :rules="confirmPasswordRules">
-        <el-input
-          type="password"
-          v-model="form.confirmPassword"
-          class="input"
-          size="small"
-        ></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="register" size="small">Register</el-button>
-      </el-form-item>
-    </el-form>
+  <el-form ref="form" :model="form" label-width="120px" size="small">
+    <el-form-item label="Name" prop="name" :rules="nameRules">
+      <el-input v-model="form.name" class="input" size="small"></el-input>
+    </el-form-item>
+    <el-form-item label="Email" prop="email" :rules="emailRules">
+      <el-input v-model="form.email" class="input" size="small"></el-input>
+    </el-form-item>
+    <el-form-item label="Password" prop="password" :rules="passwordRules">
+      <el-input type="password" v-model="form.password" class="input" size="small"></el-input>
+    </el-form-item>
+    <el-form-item label="Confirm Password" prop="confirmPassword" :rules="confirmPasswordRules">
+      <el-input
+        type="password"
+        v-model="form.confirmPassword"
+        class="input"
+        size="small"
+      ></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="register" size="small">Register</el-button>
+    </el-form-item>
+  </el-form>
   <!-- </div> -->
 </template>
 
