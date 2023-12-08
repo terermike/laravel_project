@@ -36,4 +36,14 @@ class Product extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function delete()
+    {
+        if ($this->orders()->exists()) {
+            // Throw an exception or return a message
+            return ['error' => 'Cannot delete product because it has associated orders'];
+        }
+
+        return parent::delete();
+    }
 }

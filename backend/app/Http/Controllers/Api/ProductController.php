@@ -88,7 +88,13 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if ($product) {
-            $product->delete();
+            $result = $product->delete();
+
+            if (isset($result['error'])) {
+                // Return a response with an error message
+                return response()->json(['error' => $result['error']], 400);
+            }
+
             return response()->json(["message" => "Product deleted successfully"]);
         } else {
             return response()->json(["error" => "Product not found"], 404);
