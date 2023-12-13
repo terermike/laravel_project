@@ -7898,3 +7898,27 @@ Did you mean one of these?
 #33 /home/terermike/laravel_project/backend/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
 #34 {main}
 "} 
+[2023-12-13 09:38:54] local.ERROR: Command "run" is not defined.
+
+Did you mean one of these?
+    cache:prune-stale-tags
+    model:prune
+    queue:prune-batches
+    queue:prune-failed
+    sanctum:prune-expired
+    schedule:run {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"run\" is not defined.
+
+Did you mean one of these?
+    cache:prune-stale-tags
+    model:prune
+    queue:prune-batches
+    queue:prune-failed
+    sanctum:prune-expired
+    schedule:run at /home/terermike/laravel_project/backend/vendor/symfony/console/Application.php:725)
+[stacktrace]
+#0 /home/terermike/laravel_project/backend/vendor/symfony/console/Application.php(262): Symfony\\Component\\Console\\Application->find()
+#1 /home/terermike/laravel_project/backend/vendor/symfony/console/Application.php(174): Symfony\\Component\\Console\\Application->doRun()
+#2 /home/terermike/laravel_project/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run()
+#3 /home/terermike/laravel_project/backend/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
+#4 {main}
+"} 

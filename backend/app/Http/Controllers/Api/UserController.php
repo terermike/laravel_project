@@ -104,4 +104,29 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Logout the User
+     * @param Request $request
+     * @return Response
+     */
+    public function logoutUser(Request $request)
+    {
+        try {
+            // Get user who initiated the request
+            $user = $request->user();
+            // Revoke all tokens...
+            $user->tokens()->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User Logged Out Successfully',
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
 }
