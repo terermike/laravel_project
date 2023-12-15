@@ -38,16 +38,20 @@ export default {
   },
   methods: {
     login() {
-        this.$refs.form.validate(); // Validate the form
-       User.login(this.form)
-        .then(response => {
-          this.$root.$emit("login", true);
-          localStorage.setItem("token", response.data.remember_token);
-          this.$router.push({name: "dashboard"});
+      this.$refs.form.validate() // Validate the form
+      User.login(this.form)
+        .then((response) => {
+          this.$emit('login', true)
+          localStorage.setItem('token', response.data.remember_token)
+          this.$router.push({ name: 'dashboard' })
         })
-      .catch (error => {
-        console.log(error);
-      });
+        .catch((error) => {
+          if (error.response && error.response.status == 401) {
+            this.$message.error('Incorrect email or password')
+          } else {
+            console.log(error)
+          }
+        })
     }
   }
 }
