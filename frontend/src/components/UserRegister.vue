@@ -70,19 +70,28 @@ export default {
         // Step 1: Validate the form
         await this.$refs.form.validate()
         // Step 2: If validation passes, call the backend API to register the user
-        const response = await User.register(this.form)
-        // Step 3: Handle the response from the backend
-        if (response.status === 200) {
-          // Registration successful, do something (e.g., redirect, show success message)
-          this.$router.push({ name: 'login' })
-          console.log('Registration successful')
-        } else {
-          // Registration failed, handle the error (e.g., show error message)
-          console.error('Registration failed', response.data)
-        }
+        User.register(this.form)
+          .then((response) => {
+            if (response.status === 200) {
+              this.$router.push({ name: 'login' })
+              console.log('Registartion successful')
+            }
+          })
+          .catch((error) => {
+            // Step 3: Handle errors from the backend
+            if (error.response && error.response.status === 401) {
+              // If the error is about the email being taken, show a specific message
+              if (error.response.data.status === false && error.response.data.errors.email) {
+                this.$message.error(error.response.data.errors.email[0])
+              }
+            } else {
+              // For other errors, just log them
+              console.error('Registration failed', error.response.data)
+            }
+          })
       } catch (error) {
         // Handle any errors that occurred during the registration process
-        console.error('Error during registration', error)
+        console.error('Rada chafu', error)
       }
     }
   }
