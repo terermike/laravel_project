@@ -100,4 +100,46 @@ class ProductController extends Controller
             return response()->json(["error" => "Product not found"], 404);
         }
     }
+
+    // /**
+    //  * Check the availability of a product based on its ID and requested quantity.
+
+    //  *
+    //  * @param int $productId The ID of the product to check availability for.
+    //  * @param int $requestedQuantity The quantity of the product requested.
+    //  *
+    //  * @return bool Returns true if the product is available in the requested quantity,
+    //  *              otherwise returns false.
+    //  */
+
+    // public function checkAvailability($id, $requestedQuantity)
+    // {
+    //     // Find the product by its ID
+    //     $product = Product::find($id);
+
+    //     // If the product exists and its quantity is greater than or equal to the requested quantity
+    //     if ($product && $product->quantity >= $requestedQuantity) {
+    //         return true;
+    //     }
+
+    //     // If the product does not exist or its quantity is less than the requested quantity
+    //     return false;
+    // }
+
+    // public function decreaseQuantity($id, $quantity)
+    // {
+    //     // Find the product by its ID
+    //     $product = Product::find($id);
+
+    //     // If the product exists and its quantity is greater than or equal to the requested quantity
+    //     if ($product && $product->quantity >= $quantity) {
+    //         // Decrease the quantity of the product
+    //         $product->quantity -= $quantity;
+    //         $product->save();
+    //         return true;
+    //     }
+
+    //     // If the product does not exist or its quantity is less than the requested quantity
+    //     return false;
+    // }
 }

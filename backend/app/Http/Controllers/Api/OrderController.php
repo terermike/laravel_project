@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -38,45 +39,53 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        $cart = auth()->user()->cart;
+
+        // Start a database transaction
+        DB::beginTransaction();
+
         try {
-            // Validate the request
-            $validator = Validator::make($request->all(), [
-                'product_id' => 'required|exists:products,id',
-                'quantity' => 'required|integer|min:1'
-            ]);
-
-            if ($validator->fails()) {
-                // Return a JSON response with validation error messages
-                return response()->json(['error' => $validator->errors()], 400);
-            }
-
-            // Find the product
-            $product = Product::findOrFail($request->input('product_id'));
-
-            // Calculate total price
-            $totalPrice = $product->price * $request->input('quantity');
-
             // Create a new order
             $order = new Order([
-                'product_id' => $request->input('product_id'),
-                'quantity' => $request->input('quantity'),
-                'total_price' => $totalPrice,
                 'status' => 'pending'
             ]);
 
             // Associate the order with the currently authenticated user
             auth()->user()->orders()->save($order);
 
+            // Iterate over the items in the cart
+            foreach ($cart->products as $product) {
+                // Check product availability and decrease quantity
+                if (!$product->checkAvailability($product->pivot->quantity)) {
+                    throw new \Exception('Product is not available in the required quantity');
+                }
+
+                $product->decreaseQuantity($product->pivot->quantity);
+
+                // Create an order line for the product
+                $order->products()->attach($product->id, [
+                    'quantity' => $product->pivot->quantity,
+                    'total_price' => $product->price * $product->pivot->quantity
+                ]);
+            }
+
+            // Clear the cart
+            $cart->products()->detach();
+
+            // Commit the transaction
+            DB::commit();
+
             // Return a JSON response with the created order and a success message
             return response()->json(['order' => $order, 'message' => 'Order placed successfully']);
-        } catch (ValidationException $e) {
-            // Return a JSON response with validation error messages
-            return response()->json(['error' => $e->errors()], 400);
         } catch (\Exception $e) {
-            // Return a JSON response for other unexpected errors
+            // Rollback the transaction in case of errors
+            DB::rollBack();
+
+            // Return a JSON response for the error
             return response()->json(['message' => 'Failed to place order', 'error' => $e->getMessage()], 500);
         }
     }
+
 
     /**
      * Update the status of the specified order.
