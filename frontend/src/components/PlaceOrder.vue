@@ -1,34 +1,24 @@
 <template>
   <div>
-    <h2>Place Order</h2>
-    <el-form :model="orderForm" label-width="80px">
-      <el-form-item label="Product">
-        <!-- Select product from a list -->
-        <el-select v-model="orderForm.product_id" placeholder="Select a product">
-          <el-option
-            v-for="product in products"
-            :key="product.id"
-            :label="product.name"
-            :value="product.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Quantity" label-width="80px">
-        <!-- Input for order quantity -->
-        <el-input v-model="orderForm.quantity" type="number" :min="1" />
-      </el-form-item>
-      <el-form-item>
-        <!-- Button to submit the order -->
-        <el-button type="primary" @click="placeOrder">Place Order</el-button>
-      </el-form-item>
-    </el-form>
+    <h2>Cart</h2>
+    <el-table :data="cartItems" style="width: 100%">
+      <el-table-column prop="name" label="Product"></el-table-column>
+      <el-table-column prop="pivot.quantity" label="Quantity"></el-table-column>
+      <el-table-column prop="pivot.total_price" label="Total Price"></el-table-column>
+      <el-table-column label="Actions">
+        <template v-slot="scope">
+          <el-button type="danger" icon="el-icon-delete" @click="removeFromCart(scope.row.id)"
+            >Remove from Cart</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-button type="primary" @click="placeOrder">Place Order</el-button>
 
     <!-- Display the list of orders -->
     <h2>Order List</h2>
     <el-table :data="orders" style="width: 100%">
       <el-table-column prop="id" label="Order ID" width="80"></el-table-column>
-      <el-table-column prop="name" label="Product"></el-table-column>
-      <el-table-column prop="quantity" label="Quantity"></el-table-column>
       <el-table-column label="Actions">
         <template v-slot="scope">
           <el-button type="danger" icon="el-icon-delete" @click="deleteOrder(scope.row.id)"
@@ -36,69 +26,78 @@
           >
         </template>
       </el-table-column>
+      <el-table-column label="Products">
+        <template v-slot="scope">
+          <el-table :data="scope.row.products" style="width: 100%">
+            <el-table-column prop="name" label="Product"></el-table-column>
+            <el-table-column prop="pivot.quantity" label="Quantity"></el-table-column>
+            <el-table-column prop="pivot.total_price" label="Total Price"></el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
+import Cart from '../apis/Cart'
 import Order from '../apis/Order'
-import Product from '../apis/Product'
 
 export default {
   data() {
     return {
-      orderForm: {
-        product_id: null,
-        quantity: 1
-      },
-      products: [],
+      cartItems: [],
       orders: []
     }
   },
   mounted() {
-    this.loadProducts()
+    this.loadCartItems()
     this.loadOrders()
   },
   methods: {
-    async loadProducts() {
+    async loadCartItems() {
       try {
-        const response = await Product.index()
-        this.products = response.data.products // Set this.products to the 'products' array
+        const response = await Cart.index()
+        this.cartItems = response.data.cart.products
       } catch (error) {
-        console.error('Error loading products', error)
+        this.$message.error('Error loading cart items')
       }
     },
     async loadOrders() {
       try {
         const response = await Order.index()
-        this.orders = response.data.orders // Set this.orders to the 'orders' array
+        this.orders = response.data.orders
       } catch (error) {
-        console.error('Error loading orders', error)
+        this.$message.error('Error loading orders')
       }
     },
     async placeOrder() {
       try {
-        await Order.store(this.orderForm)
-        // Reload orders after placing an order
-        this.loadOrders()
-        // Reset the form
-        this.orderForm = {
-          product_id: null,
-          quantity: 1
-        }
-        console.log('Order placed successfully')
+        const response = await Order.store()
+        this.$message.success('Order placed successfully')
+        this.loadOrders() // Refresh orders after placing order
+        this.loadCartItems() // Refresh cart items after placing order
       } catch (error) {
-        console.error('Error placing order', error)
+        console.error('Failed to place order', error)
+        this.$message.error(`Failed to place order: ${error.response.data.message}`)
       }
     },
     async deleteOrder(orderId) {
       try {
         await Order.destroy(orderId)
-        // Reload orders after deletion
-        this.loadOrders()
-        console.log('Order deleted successfully')
+        this.loadOrders() // Refresh orders after deletion
+        this.$message.success('Order deleted successfully')
       } catch (error) {
-        console.error('Error deleting order', error)
+        this.$message.error('Error deleting order')
+      }
+    },
+    async removeFromCart(productId) {
+      try {
+        await Cart.destroy(productId)
+        this.loadCartItems() // Refresh cart items after removal
+        this.$message.success('Item removed from cart successfully')
+      } catch (error) {
+        this.$message.error('Error removing item from cart')
       }
     }
   }

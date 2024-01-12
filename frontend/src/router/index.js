@@ -5,6 +5,9 @@ import UserLogin from '../components/UserLogin.vue'
 import DashBoard from '../components/DashBoard.vue'
 import ProductList from '../components/ProductList.vue'
 import PlaceOrder from '../components/PlaceOrder.vue'
+import CartController from '../components/CartController.vue'
+import SearchBar from '../components/SearchBar.vue'
+import SearchResult from '../components/SearchResult.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,23 +38,38 @@ const router = createRouter({
       name: 'dashboard',
       component: DashBoard,
       meta: { authOnly: true }
-      // children: [
-      //   {
-      //     path: '/place-order', // Child route for PlaceOrder component
-      //     name: 'place-order',
-      //     component: PlaceOrder
-      //   }
-      // ]
     },
     {
       path: '/products',
       name: 'products',
-      component: ProductList // add a route for the ProductList component
+      component: ProductList // Route for the ProductList component
     },
     {
-      path: '/place-order', // Child route for PlaceOrder component
+      path: '/place-order',
       name: 'place-order',
       component: PlaceOrder
+      // children: [
+      //   {
+      //     path: 'search',
+      //     name: 'search',
+      //     components: {
+      //       // Nested route for SearchBar and SearchResult
+      //       default: SearchBar,
+      //       result: SearchResult
+      //     }
+      //   }
+      // ]
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartController
+    },
+    {
+      path: '/search/:query',
+      name: 'SearchResult',
+      component: SearchResult,
+      props: true
     }
   ]
 })
@@ -59,8 +77,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.authOnly) && !isLoggedIn()) {
     next({ name: 'login' })
-  } else if ((to.name === 'products' || to.name === 'place-order') && !isLoggedIn()) {
-    // Redirect to login if not logged in when trying to access products or place an order
+  } else if (
+    (to.name === 'products' || to.name === 'place-order' || to.name === 'search') &&
+    !isLoggedIn()
+  ) {
+    // Redirect to login if not logged in when trying to access products, place an order, or perform a search
     next({ name: 'login' })
   } else {
     next()

@@ -14,8 +14,6 @@
 
 <script>
 import User from '../apis/User'
-// import axios from 'axios';
-// import Csrf from '../apis/Csrf';
 
 export default {
   data() {

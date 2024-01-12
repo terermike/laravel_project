@@ -5,7 +5,10 @@ export default {
   index() {
     return Api().get('/products')
   },
-
+  // Search product
+  search(searchTerm) {
+    return Api().get(`/products/search?name=${encodeURIComponent(searchTerm)}`)
+  },
   // Get a specific product
   show(id) {
     return Api().get(`/products/${id}`)

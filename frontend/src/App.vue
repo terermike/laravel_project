@@ -1,29 +1,33 @@
 <template>
-  <el-container>
-    <!-- <div id="app"> -->
+  <el-container direction="vertical">
     <el-header>
-      <el-menu mode="horizontal" style="width: 300px">
+      <el-menu mode="horizontal">
         <el-menu-item index="1" v-if="isRegisterOrLoginPage">
           <router-link to="/register">Register</router-link>
         </el-menu-item>
         <el-menu-item index="2" v-if="isRegisterOrLoginPage">
           <router-link to="/login">Login</router-link>
         </el-menu-item>
-        <el-menu-item index="3" v-if="isPlaceOrderPage">
+        <el-menu-item index="3" v-if="isLoggedIn">
           <router-link to="/products">View Products</router-link>
         </el-menu-item>
-        <el-menu-item index="4" v-if="isProductsPage">
+        <el-menu-item index="4" v-if="isLoggedIn">
           <router-link to="/place-order">Place Order</router-link>
         </el-menu-item>
         <el-menu-item index="5" v-if="isLoggedIn">
           <el-button @click="logout" type="warning">Logout</el-button>
         </el-menu-item>
+        <el-menu-item index="6" v-if="isLoggedIn">
+          <router-link to="/cart">Cart</router-link>
+        </el-menu-item>
+        <SearchBar v-if="isLoggedIn" slot="end" />
       </el-menu>
     </el-header>
+
     <el-main>
       <router-view v-on:login="handleLogin"></router-view>
+      <!-- <SearchResult v-if="showSearchResult" :query="query" :products="searchResults" /> -->
     </el-main>
-    <!-- </div> -->
   </el-container>
 </template>
 
@@ -33,6 +37,9 @@ import UserRegister from './components/UserRegister.vue'
 import UserLogin from './components/UserLogin.vue'
 import PlaceOrder from './components/PlaceOrder.vue'
 import ProductList from './components/ProductList.vue'
+import SearchBar from './components/SearchBar.vue'
+import CartController from './components/CartController.vue'
+import SearchResult from './components/SearchResult.vue'
 
 export default {
   name: 'app',
@@ -40,22 +47,32 @@ export default {
     UserRegister,
     UserLogin,
     PlaceOrder,
-    ProductList
+    ProductList,
+    SearchBar,
+    CartController,
+    SearchResult
   },
   data() {
     return {
-      isLoggedIn: !!localStorage.getItem('token')
+      isLoggedIn: !!localStorage.getItem('token'),
+      searchResults: [],
+      query: ''
     }
   },
   computed: {
     isRegisterOrLoginPage() {
       return this.$route.path === '/register' || this.$route.path === '/login'
     },
-    isPlaceOrderPage() {
-      return this.$route.path === '/place-order'
+    isCartPage() {
+      return this.$route.path === '/cart'
     },
     isProductsPage() {
       return this.$route.path === '/products'
+    },
+    showSearchResult() {
+      // Condition to show SearchResult component based on your requirement
+      // For example, you might want to show it only on the products page
+      return this.isLoggedIn && this.isProductsPage
     }
   },
   methods: {
@@ -68,26 +85,27 @@ export default {
         this.isLoggedIn = false
         this.$router.push({ name: 'home' })
       })
+    },
+    handleSearchResult(products) {
+      // Update the search results
+      // This could involve setting a data property or calling an API
+      console.log(products)
+      this.searchResults = products
+      this.query = this.searchTerm
     }
   }
 }
 </script>
 
 <style>
-/* #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
-.nav-link {
-  color: #42b983;
-  font-weight: bold;
-  margin-right: 10px;
+.el-container {
+  height: 100vh;
 }
-.el-main {
-  background: #eef1f4;
+.el-header {
+  align-items: center;
+}
+.el-menu {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
