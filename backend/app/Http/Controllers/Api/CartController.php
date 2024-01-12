@@ -42,10 +42,16 @@ class CartController extends Controller
 
         $cart = auth()->user()->cart ?? Cart::create(['user_id' => auth()->user()->id]);
 
+        // Check if the product is already in the cart
+        if ($cart->products()->where('product_id', $request->product_id)->exists()) {
+            return response()->json(['message' => 'Product is already in the cart']);
+        }
+
         $cart->products()->attach($request->product_id, ['quantity' => $request->quantity]);
 
         return response()->json(['message' => 'Product added to cart successfully']);
     }
+
 
     /**
      * Update the quantity of a product in the cart.
@@ -66,6 +72,11 @@ class CartController extends Controller
         }
 
         $cart = auth()->user()->cart;
+
+        $productInCart = $cart->products()->where('product_id', $request->product_id)->first();
+        if (!$productInCart) {
+            return response()->json(['message' => 'Product not found in cart'], 404);
+        }
         $cart->products()->updateExistingPivot($request->product_id, ['quantity' => $request->quantity]);
 
         return response()->json(['message' => 'Product quantity updated successfully']);

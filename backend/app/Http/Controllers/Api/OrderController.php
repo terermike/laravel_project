@@ -22,10 +22,13 @@ class OrderController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $userOrders = auth()->user()->orders;
+            // Eager load the products with each order
+            $userOrders = auth()->user()->orders()->with('products')->get();
+
             if ($userOrders->isEmpty()) {
                 return response()->json(['message' => "User has no pending orders"]);
             }
+
             return response()->json(['orders' => $userOrders]);
         } else {
             return response()->json(['message' => 'User is not authenticated'], 401);
@@ -40,6 +43,10 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $cart = auth()->user()->cart;
+
+        if ($cart->products->isEmpty()) {
+            return response()->json(['message' => 'Cannot place order, cart is empty'], 400);
+        }
 
         // Start a database transaction
         DB::beginTransaction();
@@ -97,7 +104,6 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         try {
-            // Validate the request
             $request->validate([
                 'status' => 'required|in:pending,processing,completed'
             ]);

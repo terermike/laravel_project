@@ -101,6 +101,28 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Search for a product by name.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Error' => $validator->errors(), 'message' => 'namna gani huku?'], 400);
+        }
+
+        $products = Product::where('name', 'like', '%' . strtolower($request->name) . '%')->get();
+
+        return response()->json(['products' => $products]);
+    }
+
+
     // /**
     //  * Check the availability of a product based on its ID and requested quantity.
 
