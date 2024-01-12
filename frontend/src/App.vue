@@ -2,31 +2,24 @@
   <el-container direction="vertical">
     <el-header>
       <el-menu mode="horizontal">
-        <el-menu-item index="1" v-if="isRegisterOrLoginPage">
-          <router-link to="/register">Register</router-link>
-        </el-menu-item>
-        <el-menu-item index="2" v-if="isRegisterOrLoginPage">
-          <router-link to="/login">Login</router-link>
-        </el-menu-item>
         <el-menu-item index="3" v-if="isLoggedIn">
           <router-link to="/products">View Products</router-link>
         </el-menu-item>
+        <el-menu-item index="6" v-if="isLoggedIn">
+          <router-link to="/cart">Cart</router-link>
+        </el-menu-item>
+        <SearchBar v-if="isLoggedIn" slot="end" />
         <el-menu-item index="4" v-if="isLoggedIn">
           <router-link to="/place-order">Place Order</router-link>
         </el-menu-item>
         <el-menu-item index="5" v-if="isLoggedIn">
           <el-button @click="logout" type="warning">Logout</el-button>
         </el-menu-item>
-        <el-menu-item index="6" v-if="isLoggedIn">
-          <router-link to="/cart">Cart</router-link>
-        </el-menu-item>
-        <SearchBar v-if="isLoggedIn" slot="end" />
       </el-menu>
     </el-header>
 
     <el-main>
       <router-view v-on:login="handleLogin"></router-view>
-      <!-- <SearchResult v-if="showSearchResult" :query="query" :products="searchResults" /> -->
     </el-main>
   </el-container>
 </template>
