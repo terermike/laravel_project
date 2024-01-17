@@ -19,12 +19,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-button type="primary" @click="placeOrder">Place Order</el-button>
+    <el-button type="danger" @click="emptyCart">Empty Cart</el-button>
   </div>
 </template>
 
 <script>
 import Cart from '../apis/Cart'
 import Product from '../apis/Product'
+import Order from '../apis/Order'
 
 export default {
   data() {
@@ -76,7 +79,7 @@ export default {
     async decreaseQuantity(index, row) {
       try {
         console.log('row:', row)
-        if (row.quantity > 1) {
+        if (row.pivot.quantity > 1) {
           this.cartItems[index].pivot.quantity = row.pivot.quantity - 1
           await Cart.updateProduct({
             product_id: row.id,
@@ -110,6 +113,25 @@ export default {
     createFilter(queryString) {
       return (product) => {
         return product.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+      }
+    },
+    async placeOrder() {
+      try {
+        const response = await Order.store()
+        this.$message.success('Order placed successfully')
+        this.loadCartItems() // Refresh cart items after placing order
+      } catch (error) {
+        console.error('Failed to place order', error)
+        this.$message.error(`Failed to place order: ${error.response.data.message}`)
+      }
+    },
+    async emptyCart() {
+      try {
+        await Cart.empty()
+        this.loadCartItems()
+      } catch (error) {
+        console.error('Failed to empty cart', error)
+        this.$message.error(`Failed to empty cart: ${error.response.data.message}`)
       }
     }
   }

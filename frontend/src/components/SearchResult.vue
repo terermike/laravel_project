@@ -73,12 +73,9 @@ export default {
       }
     },
     validateQuantity(product) {
-      // You can add additional validation logic here if needed
-      // For example, ensuring that the cartQuantity is a positive integer
       product.cartQuantity = Math.max(1, Math.floor(product.cartQuantity))
     },
     isValidQuantity(product) {
-      // You can add more complex validation logic here if needed
       return product.cartQuantity >= 1
     }
   }

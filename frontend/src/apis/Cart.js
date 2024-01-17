@@ -19,5 +19,10 @@ export default {
   // Remove a product from the cart
   removeProduct(form) {
     return Api().delete('/cart/remove', { data: form })
+  },
+
+  // Empty Cart
+  empty() {
+    return Api().delete('/cart/empty')
   }
 }
