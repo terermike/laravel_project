@@ -99,4 +99,15 @@ class CartController extends Controller
 
         return response()->json(['message' => 'Product removed from cart successfully']);
     }
+    /**
+     * Empty the cart for the authenticated user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function emptyCart()
+    {
+        $cart = auth()->user()->cart;
+        $cart->products()->detach();
+        return response()->json(['message' => 'Cart emptied successfully']);
+    }
 }
