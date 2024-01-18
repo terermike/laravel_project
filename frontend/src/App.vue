@@ -10,7 +10,7 @@
         </el-menu-item>
         <SearchBar v-if="isLoggedIn" slot="end" />
         <el-menu-item index="4" v-if="isLoggedIn">
-          <router-link to="/place-order">Place Order</router-link>
+          <router-link to="/place-order">Orders</router-link>
         </el-menu-item>
         <el-menu-item index="5" v-if="isLoggedIn">
           <el-button @click="logout" type="warning">Logout</el-button>

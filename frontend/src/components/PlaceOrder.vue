@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Cart</h2>
+    <!-- <h2>Cart</h2>
     <el-table :data="cartItems" style="width: 100%">
       <el-table-column prop="name" label="Product"></el-table-column>
       <el-table-column prop="pivot.quantity" label="Quantity"></el-table-column>
@@ -13,7 +13,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button type="primary" @click="placeOrder">Place Order</el-button>
+    <el-button type="primary" @click="placeOrder">Place Order</el-button> -->
 
     <!-- Display the list of orders -->
     <h2>Order List</h2>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Cart from '../apis/Cart'
+// import Cart from '../apis/Cart'
 import Order from '../apis/Order'
 
 export default {
@@ -51,18 +51,18 @@ export default {
     }
   },
   mounted() {
-    this.loadCartItems()
+    // this.loadCartItems()
     this.loadOrders()
   },
   methods: {
-    async loadCartItems() {
-      try {
-        const response = await Cart.index()
-        this.cartItems = response.data.cart.products
-      } catch (error) {
-        this.$message.error('Error loading cart items')
-      }
-    },
+    // async loadCartItems() {
+    //   try {
+    //     const response = await Cart.index()
+    //     this.cartItems = response.data.cart.products
+    //   } catch (error) {
+    //     this.$message.error('Error loading cart items')
+    //   }
+    // },
     async loadOrders() {
       try {
         const response = await Order.index()
@@ -71,17 +71,17 @@ export default {
         this.$message.error('Error loading orders')
       }
     },
-    async placeOrder() {
-      try {
-        const response = await Order.store()
-        this.$message.success('Order placed successfully')
-        this.loadOrders() // Refresh orders after placing order
-        this.loadCartItems() // Refresh cart items after placing order
-      } catch (error) {
-        console.error('Failed to place order', error)
-        this.$message.error(`Failed to place order: ${error.response.data.message}`)
-      }
-    },
+    // async placeOrder() {
+    //   try {
+    //     const response = await Order.store()
+    //     this.$message.success('Order placed successfully')
+    //     this.loadOrders() // Refresh orders after placing order
+    //     this.loadCartItems() // Refresh cart items after placing order
+    //   } catch (error) {
+    //     console.error('Failed to place order', error)
+    //     this.$message.error(`Failed to place order: ${error.response.data.message}`)
+    //   }
+    // },
     async deleteOrder(orderId) {
       try {
         await Order.destroy(orderId)
@@ -90,16 +90,16 @@ export default {
       } catch (error) {
         this.$message.error('Error deleting order')
       }
-    },
-    async removeFromCart(productId) {
-      try {
-        await Cart.destroy(productId)
-        this.loadCartItems() // Refresh cart items after removal
-        this.$message.success('Item removed from cart successfully')
-      } catch (error) {
-        this.$message.error('Error removing item from cart')
-      }
     }
+    // async removeFromCart(productId) {
+    //   try {
+    //     await Cart.destroy(productId)
+    //     this.loadCartItems() // Refresh cart items after removal
+    //     this.$message.success('Item removed from cart successfully')
+    //   } catch (error) {
+    //     this.$message.error('Error removing item from cart')
+    //   }
+    // }
   }
 }
 </script>
